@@ -4,6 +4,12 @@
 
 Resim yükleme sisteminde yüklenen dosyaların kalıcı olması için storage eklemeniz gerekiyor.
 
+## ⚠️ ÖNEMLİ: Alan İsimleri
+
+Coolify'da storage formunda **iki alan** var:
+- **Destination Path** (Container içi yol)
+- **Source Path** (Sunucu üzerindeki yol)
+
 ## Adım Adım Talimatlar
 
 ### 1. Storage Sayfasına Gidin
@@ -15,29 +21,35 @@ Resim yükleme sisteminde yüklenen dosyaların kalıcı olması için storage e
 
 ### 3. Storage Ayarlarını Doldurun
 
-Açılan formda şu değerleri girin:
+**ÇOK ÖNEMLİ:** Alanları doğru doldurun!
 
 ```
-Volume Path: /app/uploads
+Destination Path: /app/uploads
+Source Path: (BOŞ BIRAK veya /data/{app-name}/uploads)
 ```
 
-**Host Path** için:
-- **Seçenek 1 (Önerilen):** Boş bırakın - Coolify otomatik oluşturur
-- **Seçenek 2:** Manuel olarak `/data/nextjs-image-upload/uploads` yazın
+**Örnek:**
+```
+Destination Path: /app/uploads
+Source Path: /data/nextjs-image-upload/uploads
+```
+
+**VEYA** Source Path'i boş bırakın (Coolify otomatik oluşturur)
 
 ### 4. Kaydet
 - **"Save"** veya **"Add Storage"** butonuna tıklayın
 
 ## ✅ Doğru Ayarlar
 
-- ✅ **Volume Path**: `/app/uploads` (mutlaka bu olmalı!)
-- ✅ **Host Path**: Boş bırakılabilir veya `/data/{app-name}/uploads`
+- ✅ **Destination Path**: `/app/uploads` (mutlaka bu olmalı!)
+- ✅ **Source Path**: Boş bırakılabilir veya `/data/{app-name}/uploads`
 
 ## ❌ Yanlış Ayarlar
 
-- ❌ Volume Path: `/uploads` (eksik!)
-- ❌ Volume Path: `./uploads` (yanlış format!)
-- ❌ Volume Path: `/app/uploads/images` (fazla!)
+- ❌ **Destination Path**: `/root/test` (YANLIŞ! Container içi path olmalı)
+- ❌ **Destination Path**: `/uploads` (eksik - `/app/uploads` olmalı)
+- ❌ **Destination Path**: `./uploads` (yanlış format - mutlak path olmalı)
+- ❌ **Source Path**: `/app/uploads` (YANLIŞ! Bu container içi path, host path olmalı)
 
 ## 🔍 Nasıl Kontrol Edilir?
 
