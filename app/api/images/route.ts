@@ -5,7 +5,8 @@ import { statSync } from 'fs';
 
 export async function GET() {
   try {
-    const uploadsDir = process.env.UPLOADS_DIR || join(process.cwd(), 'uploads');
+    // Standalone build'de process.cwd() farklı olabilir, mutlak path kullan
+    const uploadsDir = process.env.UPLOADS_DIR || '/app/uploads';
     
     let files: string[] = [];
     try {

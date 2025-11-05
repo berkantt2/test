@@ -31,20 +31,30 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Persistent storage klasörü
-RUN mkdir -p /app/uploads && chown -R nextjs:nodejs /app/uploads
+# su-exec için gerekli (Alpine'de su yerine)
+RUN apk add --no-cache su-exec
+
+# Persistent storage klasörü - volume mount edildiğinde izinler korunacak
+# Ama yine de varsayılan olarak oluştur ve izinleri ayarla
+RUN mkdir -p /app/uploads && chown -R nextjs:nodejs /app/uploads && chmod -R 755 /app/uploads
 
 # Standalone build kullanıyorsak, public klasörü zaten .next/standalone içinde
 # Sadece varsa kopyala
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-USER nextjs
+# Entrypoint script'i kopyala ve çalıştırılabilir yap
+# Root olarak çalışacak, izinleri düzeltecek, sonra nextjs'e geçecek
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+
+# USER nextjs - Entrypoint root olarak çalışacak, sonra su-exec ile geçecek
 
 EXPOSE 3000
 
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
+ENV UPLOADS_DIR=/app/uploads
 
-CMD ["node", "server.js"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 

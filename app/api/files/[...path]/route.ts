@@ -19,7 +19,8 @@ export async function GET(
       );
     }
 
-    const uploadsDir = process.env.UPLOADS_DIR || join(process.cwd(), 'uploads');
+    // Standalone build'de process.cwd() farklı olabilir, mutlak path kullan
+    const uploadsDir = process.env.UPLOADS_DIR || '/app/uploads';
     const filePath = join(uploadsDir, fileName);
 
     if (!existsSync(filePath)) {
