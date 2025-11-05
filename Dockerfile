@@ -34,12 +34,10 @@ RUN adduser --system --uid 1001 nextjs
 # Persistent storage klasörü
 RUN mkdir -p /app/uploads && chown -R nextjs:nodejs /app/uploads
 
-COPY --from=builder /app/public ./public
+# Standalone build kullanıyorsak, public klasörü zaten .next/standalone içinde
+# Sadece varsa kopyala
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-# Standalone build için gerekli node_modules
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 
 USER nextjs
 
