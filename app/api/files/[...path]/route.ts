@@ -8,13 +8,24 @@ export async function GET(
   { params }: { params: Promise<{ path: string[] }> }
 ) {
   try {
-    const { path } = await params;
-    const fileName = path.join('/');
+    const { path: pathArray } = await params;
+    // Path array'ini birleştir - Next.js dynamic route [...path] için
+    // Örnek: /api/files/1234567890-image.jpg -> pathArray = ['1234567890-image.jpg']
+    // Örnek: /api/files/folder/image.jpg -> pathArray = ['folder', 'image.jpg']
+    const fileName = pathArray.join('/');
     
-    // Güvenlik kontrolü - sadece dosya adına izin ver
-    if (fileName.includes('..') || fileName.includes('/')) {
+    // Güvenlik kontrolü - path traversal saldırılarını önle
+    if (fileName.includes('..') || fileName.includes('\\') || fileName.startsWith('/')) {
       return NextResponse.json(
         { error: 'Geçersiz dosya yolu' },
+        { status: 400 }
+      );
+    }
+    
+    // Dosya adı boş olamaz
+    if (!fileName || fileName.trim() === '') {
+      return NextResponse.json(
+        { error: 'Dosya adı belirtilmedi' },
         { status: 400 }
       );
     }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface ImageInfo {
   fileName: string;
@@ -56,12 +57,16 @@ export default function ImageGallery() {
           key={index}
           className="relative group overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow"
         >
-          <img
-            src={image.url}
-            alt={image.fileName}
-            className="w-full h-48 object-cover"
-            loading="lazy"
-          />
+          <div className="relative w-full h-48">
+            <Image
+              src={image.url}
+              alt={image.fileName}
+              fill
+              className="object-cover"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              loading="lazy"
+            />
+          </div>
           <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all flex items-center justify-center">
             <div className="text-white opacity-0 group-hover:opacity-100 transition-opacity text-center p-2">
               <p className="text-sm truncate">{image.fileName}</p>
